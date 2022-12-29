@@ -2,7 +2,7 @@ package main
 
 import (
 	"go-project/controllers"
-	"go-project/models"
+	"go-project/db"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -13,17 +13,17 @@ func main() {
 	r := gin.Default()
 
 	err := godotenv.Load()
-
 	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
 
-	models.ConnectDatabase()
+	db.Init()
 
-	r.GET("/books", controllers.FindBooks)
-	r.POST("books", controllers.CreateBook)
-	r.GET("/books/:id", controllers.FindBook)
-	r.PATCH("/books/:id", controllers.UpdateBook)
+	r.GET("/users", controllers.FindAll)
+	r.POST("users", controllers.CreateUser)
+	r.GET("/users/:id", controllers.FindOne)
+	r.PATCH("/users/:id", controllers.UpdateUser)
+	r.DELETE("/users/:id", controllers.DeleteUser)
 
-	r.Run()
+	r.Run(":8080")
 }
