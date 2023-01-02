@@ -19,11 +19,16 @@ func main() {
 
 	db.Init()
 
-	r.GET("/users", controllers.FindAll)
+	r.GET("/users", controllers.FindAllUsers)
 	r.POST("users", controllers.CreateUser)
-	r.GET("/users/:id", controllers.FindOne)
+	r.GET("/users/:id", controllers.FindOneUser)
 	r.PATCH("/users/:id", controllers.UpdateUser)
 	r.DELETE("/users/:id", controllers.DeleteUser)
+	r.GET("/merchants", controllers.FindAllMerchants)
+	r.POST("merchants", controllers.CreateMerchant)
+	r.GET("/merchants/:id", controllers.FindOneMerchant)
+	r.PATCH("/merchants/:id", controllers.UpdateMerchant)
+	r.DELETE("/merchants/:id", controllers.DeleteMerchant)
 
 	r.Run(":8080")
 }

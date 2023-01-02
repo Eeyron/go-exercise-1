@@ -8,16 +8,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func FindAll(c *gin.Context) {
+func FindAllUsers(c *gin.Context) {
 	var users []models.User
 	db.DB.Find(&users)
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }
 
-func FindOne(c *gin.Context) {
+func FindOneUser(c *gin.Context) {
 	var user models.User
 
-	if err := db.DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
+	if err := db.DB.First(&user, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found!"})
 		return
 	}
@@ -33,14 +33,18 @@ func CreateUser(c *gin.Context) {
 	}
 
 	user := models.User{FullName: input.FullName, Email: input.Email}
-	db.DB.Create(&user)
+
+	if err := db.DB.Create(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusCreated, gin.H{"data": user})
 }
 
 func UpdateUser(c *gin.Context) {
 	var user models.User
-	if err := db.DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
+	if err := db.DB.First(&user, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found!"})
 		return
 	}
@@ -51,19 +55,25 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	db.DB.Model(&user).Updates(input)
+	if err := db.DB.Model(&user).Updates(input).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
 func DeleteUser(c *gin.Context) {
 	var user models.User
-	if err := db.DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
+	if err := db.DB.First(&user, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found!"})
 		return
 	}
 
-	db.DB.Delete(&user)
+	if err := db.DB.Delete(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
