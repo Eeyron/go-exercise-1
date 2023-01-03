@@ -26,9 +26,9 @@ func connectDatabase(dsn string) {
 		panic("Failed to connect to database!")
 	}
 
-	err = database.AutoMigrate(&User{}, &Merchant{})
+	err = database.AutoMigrate(&User{}, &Product{}, &Merchant{}, &Order{}, &OrderItem{})
 	if err != nil {
-		return
+		panic("Failed to migrate the database!")
 	}
 
 	DB = database

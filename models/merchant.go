@@ -8,6 +8,7 @@ type Merchant struct {
 	SocialLink string
 	UserID     uint
 	User       User
+	Products   []Product
 }
 
 type CreateMerchantInput struct {
