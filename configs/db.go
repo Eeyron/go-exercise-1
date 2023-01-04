@@ -1,26 +1,25 @@
-package db
+package configs
 
 import (
 	"fmt"
-	. "go-project/models"
+	. "go-project/entities"
 	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
-
-func Init() {
+func SetupDatabase() *gorm.DB {
 	details := []string{"host", "port", "dbname", "user", "password"}
 	var dsn string
 	for _, key := range details {
 		dsn += fmt.Sprintf("%v=%v ", key, os.Getenv(key))
 	}
-	connectDatabase(dsn)
+	db := connectDatabase(dsn)
+	return db
 }
 
-func connectDatabase(dsn string) {
+func connectDatabase(dsn string) *gorm.DB {
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("Failed to connect to database!")
@@ -31,5 +30,5 @@ func connectDatabase(dsn string) {
 		panic("Failed to migrate the database!")
 	}
 
-	DB = database
+	return database
 }

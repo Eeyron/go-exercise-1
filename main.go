@@ -1,45 +1,37 @@
 package main
 
 import (
-	"go-project/controllers"
-	"go-project/db"
+	config "go-project/configs"
+	route "go-project/routes"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"gorm.io/gorm"
 )
 
 func main() {
-	r := gin.Default()
-
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
 
-	db.Init()
+	db := config.SetupDatabase()
 
-	r.GET("/users", controllers.FindAllUsers)
-	r.POST("users", controllers.CreateUser)
-	r.GET("/users/:id", controllers.FindOneUser)
-	r.PATCH("/users/:id", controllers.UpdateUser)
-	r.DELETE("/users/:id", controllers.DeleteUser)
+	router := SetupRouter(db)
 
-	r.GET("/merchants", controllers.FindAllMerchants)
-	r.POST("merchants", controllers.CreateMerchant)
-	r.GET("/merchants/:id", controllers.FindOneMerchant)
-	r.PATCH("/merchants/:id", controllers.UpdateMerchant)
-	r.DELETE("/merchants/:id", controllers.DeleteMerchant)
+	router.Run(":" + os.Getenv("server-port"))
+}
 
-	r.GET("/products", controllers.FindAllProducts)
-	r.POST("products", controllers.CreateProduct)
-	r.GET("/products/:id", controllers.FindOneProduct)
-	r.PATCH("/products/:id", controllers.UpdateProduct)
-	r.DELETE("/products/:id", controllers.DeleteProduct)
+func SetupRouter(db *gorm.DB) *gin.Engine {
 
-	r.GET("/orders", controllers.FindAllOrders)
-	r.POST("orders", controllers.CreateOrder)
-	r.GET("/orders/:id", controllers.FindOneOrder)
+	router := gin.Default()
 
-	r.Run(":8080")
+	route.UserRoutes(db, router)
+	route.MerchantRoutes(db, router)
+	route.ProductRoutes(db, router)
+	route.OrderRoutes(db, router)
+
+	return router
 }
