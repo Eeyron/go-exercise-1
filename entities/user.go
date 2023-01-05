@@ -5,7 +5,7 @@ import "gorm.io/gorm"
 type User struct {
 	gorm.Model
 	FullName string
-	Email    string
+	Email    string `gorm:"unique"`
 }
 
 type CreateUserInput struct {

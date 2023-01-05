@@ -27,7 +27,7 @@ func connectDatabase(dsn string) *gorm.DB {
 		panic("Failed to connect to database!")
 	}
 
-	err = database.AutoMigrate(&User{}, &Product{}, &Merchant{}, &Order{}, &OrderItem{})
+	err = database.AutoMigrate(&User{})
 	if err != nil {
 		panic("Failed to migrate the database!")
 	}
