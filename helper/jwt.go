@@ -60,7 +60,7 @@ func ValidateToken(c *gin.Context) error {
 	return errors.New("invalid token")
 }
 
-func ValidUser(c *gin.Context) error {
+func ValidateUser(c *gin.Context) error {
 	if err := ValidateToken(c); err != nil {
 		return err
 	}
