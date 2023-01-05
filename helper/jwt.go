@@ -36,6 +36,9 @@ func ExtractTokenFromRequest(c *gin.Context) string {
 
 func ExtractToken(c *gin.Context) (*jwt.Token, error) {
 	tokenString := ExtractTokenFromRequest(c)
+	if tokenString == "" {
+		return nil, errors.New("authorization required")
+	}
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])

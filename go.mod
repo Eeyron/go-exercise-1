@@ -3,6 +3,7 @@ module go-project
 go 1.19
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.8.2
 	github.com/joho/godotenv v1.4.0
 	github.com/restuwahyu13/gin-rest-api v0.0.0-20210507011910-0a0452090edc
@@ -11,7 +12,6 @@ require (
 )
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
