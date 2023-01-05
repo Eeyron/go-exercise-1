@@ -2,6 +2,7 @@ package routes
 
 import (
 	. "go-project/handlers"
+	"go-project/middleware"
 	. "go-project/repositories"
 	. "go-project/services"
 
@@ -16,9 +17,10 @@ func MerchantRoutes(db *gorm.DB, route *gin.Engine) {
 	merchantHandler := NewMerchantHandler(merchantService)
 
 	merchantRoute := route.Group("/api/v1/merchants")
-	merchantRoute.GET("/", merchantHandler.FindAll)
-	merchantRoute.GET("/:id", merchantHandler.FindOne)
-	merchantRoute.POST("/", merchantHandler.Create)
-	merchantRoute.PATCH("/:id", merchantHandler.Update)
-	merchantRoute.DELETE("/:id", merchantHandler.Delete)
+	protectedRoute := merchantRoute.Use(middleware.JWTAuthMiddleware())
+	protectedRoute.GET("/", merchantHandler.FindAll)
+	protectedRoute.GET("/:id", merchantHandler.FindOne)
+	protectedRoute.POST("/", merchantHandler.Create)
+	protectedRoute.PATCH("/:id", merchantHandler.Update)
+	protectedRoute.DELETE("/:id", merchantHandler.Delete)
 }

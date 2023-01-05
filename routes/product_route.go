@@ -2,6 +2,7 @@ package routes
 
 import (
 	. "go-project/handlers"
+	"go-project/middleware"
 	. "go-project/repositories"
 	. "go-project/services"
 
@@ -16,9 +17,10 @@ func ProductRoutes(db *gorm.DB, route *gin.Engine) {
 	productHandler := NewProductHandler(productService)
 
 	productRoute := route.Group("/api/v1/products")
-	productRoute.GET("/", productHandler.FindAll)
-	productRoute.GET("/:id", productHandler.FindOne)
-	productRoute.POST("/", productHandler.Create)
-	productRoute.PATCH("/:id", productHandler.Update)
-	productRoute.DELETE("/:id", productHandler.Delete)
+	protectedRoute := productRoute.Use(middleware.JWTAuthMiddleware())
+	protectedRoute.GET("/", productHandler.FindAll)
+	protectedRoute.GET("/:id", productHandler.FindOne)
+	protectedRoute.POST("/", productHandler.Create)
+	protectedRoute.PATCH("/:id", productHandler.Update)
+	protectedRoute.DELETE("/:id", productHandler.Delete)
 }

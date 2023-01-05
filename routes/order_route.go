@@ -2,6 +2,7 @@ package routes
 
 import (
 	. "go-project/handlers"
+	"go-project/middleware"
 	. "go-project/repositories"
 	. "go-project/services"
 
@@ -16,7 +17,8 @@ func OrderRoutes(db *gorm.DB, route *gin.Engine) {
 	orderHandler := NewOrderHandler(orderService)
 
 	orderRoute := route.Group("/api/v1/orders")
-	orderRoute.GET("/", orderHandler.FindAll)
-	orderRoute.GET("/:id", orderHandler.FindOne)
-	orderRoute.POST("/", orderHandler.Create)
+	protectedRoute := orderRoute.Use(middleware.JWTAuthMiddleware())
+	protectedRoute.GET("/", orderHandler.FindAll)
+	protectedRoute.GET("/:id", orderHandler.FindOne)
+	protectedRoute.POST("/", orderHandler.Create)
 }

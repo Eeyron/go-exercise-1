@@ -21,7 +21,7 @@ func main() {
 
 	router := SetupRouter(db)
 
-	router.Run(":" + os.Getenv("server-port"))
+	router.Run(":" + os.Getenv("SERVER"))
 }
 
 func SetupRouter(db *gorm.DB) *gin.Engine {

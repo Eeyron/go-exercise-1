@@ -2,6 +2,7 @@ package routes
 
 import (
 	. "go-project/handlers"
+	"go-project/middleware"
 	. "go-project/repositories"
 	. "go-project/services"
 
@@ -16,9 +17,11 @@ func UserRoutes(db *gorm.DB, route *gin.Engine) {
 	userHandler := NewUserHandler(userService)
 
 	userRoute := route.Group("/api/v1/users")
-	userRoute.GET("/", userHandler.FindAll)
-	userRoute.GET("/:id", userHandler.FindOne)
 	userRoute.POST("/", userHandler.Create)
-	userRoute.PATCH("/:id", userHandler.Update)
-	userRoute.DELETE("/:id", userHandler.Delete)
+
+	protectedRoute := userRoute.Use(middleware.JWTAuthMiddleware())
+	protectedRoute.GET("/", userHandler.FindAll)
+	protectedRoute.GET("/:id", userHandler.FindOne)
+	protectedRoute.PATCH("/:id", userHandler.Update)
+	protectedRoute.DELETE("/:id", userHandler.Delete)
 }

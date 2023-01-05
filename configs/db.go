@@ -9,14 +9,16 @@ import (
 	"gorm.io/gorm"
 )
 
+var DB *gorm.DB
+
 func SetupDatabase() *gorm.DB {
 	details := []string{"host", "port", "dbname", "user", "password"}
 	var dsn string
 	for _, key := range details {
 		dsn += fmt.Sprintf("%v=%v ", key, os.Getenv(key))
 	}
-	db := connectDatabase(dsn)
-	return db
+	DB = connectDatabase(dsn)
+	return DB
 }
 
 func connectDatabase(dsn string) *gorm.DB {
